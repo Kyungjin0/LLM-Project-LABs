@@ -1,0 +1,30 @@
+name: lab2-tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - "starter-labs/llm-sec-lab2-starter/llm-sec-lab2/**"
+      - ".github/workflows/lab2-tests.yml"
+  pull_request:
+    paths:
+      - "starter-labs/llm-sec-lab2-starter/llm-sec-lab2/**"
+      - ".github/workflows/lab2-tests.yml"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: starter-labs/llm-sec-lab2-starter/llm-sec-lab2
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run unit tests
+        run: python -m unittest discover tests

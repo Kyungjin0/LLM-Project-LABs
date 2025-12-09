@@ -1,0 +1,1 @@
+# RedArena Notes\nRecord: game, your best attempt, what influenced the model, OWASP mapping.\n
