@@ -8,8 +8,11 @@ reports.mkdir(exist_ok=True)
 
 
 def build_cmd():
+    # Use python -m semgrep to avoid Windows .py file association issues
+    # Note: Semgrep doesn't natively support Windows - may need WSL or Docker
     cmd = [
-        "semgrep",
+        sys.executable,
+        "-m", "semgrep",
         "--config", "p/kubernetes",
         "--config", "p/dockerfile",
         "--config", str(root / "config" / "semgrep_rules.yml"),

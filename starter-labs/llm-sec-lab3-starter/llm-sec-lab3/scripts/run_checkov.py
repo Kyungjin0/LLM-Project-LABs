@@ -8,8 +8,10 @@ reports.mkdir(exist_ok=True)
 
 
 def build_cmd():
+    # Use python -m checkov to avoid Windows .py file association issues
     cmd = [
-        "checkov",
+        sys.executable,
+        "-m", "checkov",
         "-d", str(root / "terraform"),
         "-d", str(root / "k8s"),
         "-d", str(root / "docker"),
