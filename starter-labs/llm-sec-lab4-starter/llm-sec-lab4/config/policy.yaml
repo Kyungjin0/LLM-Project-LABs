@@ -1,26 +1,126 @@
 deny_input_regex:
-  - "(?i)ignore (all|previous) instructions"
-  - "(?i)you are now the system"
-  - "(?i)pretend to be.*(developer|system)"
-  - "(?i)act as (system|developer)"
-  - "(?i)reveal|leak|exfiltrate|steal (the|my|your) (secret|password|api key|token)"
-  - "(?i)print the admin password"
-  - "(?i)run shell|execute .*command|rm -rf|powershell -"
-  - "(?i)browse this url and follow its instructions"
+  # =====================================================
+  # PROMPT INJECTION — ROLE & SYSTEM OVERRIDE
+  # =====================================================
+  - '(?i)ignore (all|previous) instructions'
+  - '(?i)you are now the system'
+  - '(?i)i am your developer'
+  - '(?i)pretend to be.*(developer|system)'
+  - '(?i)act as (system|developer)'
+  - '(?i)convert .* into a system message'
+  - '(?i)copy[- ]?paste .* system prompt'
+  - '(?i)tell me the .* system prompt'
+  - '(?i)list .* hidden prompt'
 
+  # =====================================================
+  # SAFETY BYPASS / JAILBREAK ATTEMPTS
+  # =====================================================
+  - '(?i)bypass (all )?(safety|filters|guardrails)'
+  - '(?i)disable (all )?(safeguards|protections)'
+  - '(?i)override (all )?(filters|rules)'
+  - '(?i)reclassify harmful instructions as safe'
+  - '(?i)return .* is_safe.*yes'
+  - '(?i)name .* jailbreak .* use them'
+
+  # =====================================================
+  # INDIRECT / ENCODED PROMPT INJECTION
+  # =====================================================
+  - '(?i)base64'
+  - '(?i)decode .* base64'
+  - '(?i)indirect prompt injection'
+  - '(?i)follow instructions from (a|this) (url|page|website)'
+  - '(?i)summarize .* web page .* instructions'
+
+  # =====================================================
+  # SYSTEM / FILE / MEMORY EXFILTRATION
+  # =====================================================
+  - '(?i)/etc/passwd'
+  - '(?i)/etc/shadow'
+  - '(?i)read .* file'
+  - '(?i)dump .* memory'
+  - '(?i)model weights'
+  - '(?i)training data'
+  - '(?i)environment variables'
+
+  # =====================================================
+  # SECRETS / CREDENTIALS / CLOUD
+  # =====================================================
+  - '(?i)api[_-]?key'
+  - '(?i)client_secret'
+  - '(?i)oauth'
+  - '(?i)database .* password'
+  - '(?i)connection string'
+  - '(?i)aws .* key'
+  - '(?i)cloud .* token'
+
+  # =====================================================
+  # MALWARE / OFFENSIVE SECURITY CONTENT
+  # =====================================================
+  - '(?i)malware'
+  - '(?i)ransomware'
+  - '(?i)keylogger'
+  - '(?i)trojan'
+  - '(?i)rat'
+  - '(?i)polymorphic'
+  - '(?i)privilege escalation'
+  - '(?i)exploit'
+  - '(?i)payload'
+  - '(?i)sql injection'
+  - '(?i)union select'
+  - '(?i)drop table'
+
+# =======================================================
+# OUTPUT FILTERING — DATA LEAK PREVENTION
+# =======================================================
 deny_output_regex:
-  - "(?i)secret|password|api[_-]?key|token|private key|ssh-rsa"
-  - "(?i)<script>|javascript:"
+  # --- Secrets & Tokens ---
+  - '(?i)api[_-]?key'
+  - '(?i)secret'
+  - '(?i)password'
+  - '(?i)token'
+  - '(?i)client_secret'
+  - '(?i)authorization:\s*bearer'
 
+  # --- Cloud Keys ---
+  - '(?i)AKIA[0-9A-Z]{16}'
+  - '(?i)sk[-_][a-z0-9]{16,}'
+
+  # --- Private Keys ---
+  - '(?i)BEGIN (RSA|OPENSSH|EC) PRIVATE KEY'
+  - '(?i)ssh-rsa'
+
+  # --- XSS / Script Injection ---
+  - '(?i)<script'
+  - '(?i)javascript:'
+  - '(?i)localStorage'
+  - '(?i)document\.cookie'
+
+  # --- File Dumps ---
+  - '(?i)/etc/passwd'
+  - '(?i)/etc/shadow'
+
+  # --- PII / Sensitive Data ---
+  - '(?i)\b\d{16}\b'
+  - '(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}'
+
+# =======================================================
+# PII DETECTION (ADDITIONAL SIGNALING)
+# =======================================================
 pii_patterns:
-  email: "(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"
-  generic_key: "(?i)(sk|key|token)[-_][a-z0-9]{16,}"
-  aws_key: "(?i)AKIA[0-9A-Z]{16}"
+  email: '(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b'
+  generic_key: '(?i)(sk|key|token)[-_][a-z0-9]{16,}'
+  aws_key: '(?i)AKIA[0-9A-Z]{16}'
 
+# =======================================================
+# ALLOWED TOOLS (RESTRICTED)
+# =======================================================
 allowed_tools:
-  - "search"
-  - "readfile"
+  - 'search'
+  - 'readfile'
 
+# =======================================================
+# OUTPUT SCHEMA (ANTI-MANIPULATION)
+# =======================================================
 output_schema:
-  is_safe: "yes|no"
-  rationale: "string"
+  is_safe: 'yes|no'
+  rationale: 'string'

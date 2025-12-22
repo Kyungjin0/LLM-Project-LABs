@@ -23,25 +23,25 @@ Depuis la racine du projet (`C:\llm-cybesecurity-labs-project\starter-labs\llm-s
 $env:MODEL_ID="gemini-flash-latest"
 python -m src.app
 Copy-Item reports\baseline.json reports\baseline_gemini-flash-latest.json
-Write-Host "✅ Baseline généré pour gemini-flash-latest"
+Write-Host  Baseline généré pour gemini-flash-latest"
 
 # 2. gemini-2.5-pro
 $env:MODEL_ID="gemini-2.5-pro"
 python -m src.app
 Copy-Item reports\baseline.json reports\baseline_gemini-2.5-pro.json
-Write-Host "✅ Baseline généré pour gemini-2.5-pro"
+Write-Host  Baseline généré pour gemini-2.5-pro"
 
 # 3. gemini-2.5-flash-lite
 $env:MODEL_ID="gemini-2.5-flash-lite"
 python -m src.app
 Copy-Item reports\baseline.json reports\baseline_gemini-2.5-flash-lite.json
-Write-Host "✅ Baseline généré pour gemini-2.5-flash-lite"
+Write-Host  Baseline généré pour gemini-2.5-flash-lite"
 
 # 4. gemini-2.5-flash (explicite, pour comparaison)
 $env:MODEL_ID="gemini-2.5-flash"
 python -m src.app
 Copy-Item reports\baseline.json reports\baseline_gemini-2.5-flash.json
-Write-Host "✅ Baseline généré pour gemini-2.5-flash"
+Write-Host  Baseline généré pour gemini-2.5-flash"
 ```
 
 ### Méthode 2: Via le Notebook Jupyter
@@ -104,11 +104,7 @@ Pour chaque modèle, note:
 - **Risques LLM couverts**: LLM01, LLM02, LLM03, LLM04, LLM06, LLM08, LLM09, LLM10
 
 ### Points Forts
-
-✅ **Bonne couverture CWE**: 13 CWE différents détectés, couvrant un large éventail de vulnérabilités
-✅ **Refus explicites**: 7 refus détectés sur les prompts malveillants
-✅ **Rationales détaillées**: 476 caractères en moyenne, explications complètes
-✅ **Détection complète**: Tous les risques OWASP LLM Top 10 pertinents sont détectés
+ **Bonne couverture CWE**: 13 CWE différents détectés, couvrant un large éventail de vulnérabilités **Refus explicites**: 7 refus détectés sur les prompts malveillants **Rationales détaillées**: 476 caractères en moyenne, explications complètes **Détection complète**: Tous les risques OWASP LLM Top 10 pertinents sont détectés
 
 ### Points à Améliorer
 
@@ -227,13 +223,13 @@ foreach ($model in $models) {
     python -m src.app
     $outputFile = "reports\baseline_$model.json"
     Copy-Item reports\baseline.json $outputFile
-    Write-Host "✅ Baseline sauvegardé: $outputFile"
+    Write-Host  Baseline sauvegardé: $outputFile"
 }
 
 Write-Host "`n📊 Analyse des modèles..."
 python analyze_models.py
 
-Write-Host "`n✅ Terminé! Consulte reports/model_analysis_report.md pour les résultats."
+Write-Host "` Terminé! Consulte reports/model_analysis_report.md pour les résultats."
 ```
 
 Puis exécute:
@@ -245,9 +241,9 @@ Puis exécute:
 
 ## Prochaines Étapes
 
-1. ✅ Génère les baselines pour tous les modèles (voir commandes ci-dessus)
-2. ✅ Exécute `python analyze_models.py` pour obtenir les métriques
-3. ✅ Compare les résultats dans les tableaux générés
-4. ✅ Remplis le template d'observations ci-dessus
-5. ✅ Intègre tes observations dans la section "Observations" de ton rapport final
+1. Génère les baselines pour tous les modèles (voir commandes ci-dessus)
+2. Exécute `python analyze_models.py` pour obtenir les métriques
+3. Compare les résultats dans les tableaux générés
+4. Remplis le template d'observations ci-dessus
+5. Intègre tes observations dans la section "Observations" de ton rapport final
 

@@ -31,7 +31,7 @@ def run(attacks: List[str], mode: str, out_path: str, *, client=None, model_id: 
     if client is None:
         load_dotenv()
         client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        model_id = os.getenv("MODEL_ID","gemini-2.5-flash")
+        model_id = os.getenv("MODEL_ID", "gemini-2.5-flash")
     if policy is None:
         policy = load_policy("config/policy.yaml")
 
@@ -43,15 +43,20 @@ def run(attacks: List[str], mode: str, out_path: str, *, client=None, model_id: 
         time.sleep(max(sleep_seconds, 0))
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
+    out_path_abs = os.path.abspath(out_path)
+    print(f"[INFO] Writing report to: {out_path_abs}")
+
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
+
     print(f"Wrote {out_path}")
     return out_path
 
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--mode", choices=["unguarded","guarded"], required=True)
+    p.add_argument("--mode", choices=["unguarded", "guarded"], required=True)
     p.add_argument("--limit", type=int, default=50)
     p.add_argument("--attacks", default="attacks/attacks.txt")
     p.add_argument("--policy", default="config/policy.yaml")
@@ -60,7 +65,7 @@ def main():
 
     load_dotenv()
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-    model_id = os.getenv("MODEL_ID","gemini-2.5-flash")
+    model_id = os.getenv("MODEL_ID", "gemini-2.5-flash")
     attacks = [l.strip() for l in open(args.attacks, encoding="utf-8").read().splitlines() if l.strip() and not l.startswith("#")][:args.limit]
     policy = load_policy(args.policy)
     out = args.out or f"reports/{args.mode}.json"

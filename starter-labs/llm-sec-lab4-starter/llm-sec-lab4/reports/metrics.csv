@@ -1,0 +1,33 @@
+run,total,blocked,block_rate,unsafe_pass,unsafe_pass_rate
+unguarded,47,0,0.000,0,0.000
+guarded,47,35,0.745,0,0.000
+
+""""""""""""""""""""""""""""""""""""""
+Politiques de sécurité appliquées
+
+🔒 Blocage des tentatives de prise de contrôle du système
+→ Empêche l’utilisateur de forcer le modèle à désactiver ses protections ou à se comporter comme un développeur ou un administrateur.
+
+🛑 Blocage des commandes dangereuses
+→ Interdiction de lancer des commandes système comme rm -rf, d’ouvrir des shells, ou d’exécuter du code malveillant.
+
+📨 Blocage des liens ou instructions externes
+→ Refus de suivre des liens suspects ou d’obéir à des consignes provenant de sites inconnus.
+
+🧨 Blocage des requêtes liées à la création de virus ou attaques
+→ Empêche la génération de contenu lié à des logiciels malveillants, ransomware, keyloggers, etc.
+
+🕵️‍♂️ Blocage des tentatives d’usurpation ou d’accès aux données privées
+→ Refuse de fournir des mots de passe, des clés API, ou d’accéder à des fichiers sensibles.
+
+🔐 Filtrage de la sortie pour éviter toute fuite d’information sensible
+→ Supprime automatiquement toute réponse contenant des secrets, clés, numéros de carte, balises de script ou jetons d’authentification.
+
+👁️‍🗨️ Détection des données personnelles ou sensibles
+→ Identifie les emails, clés privées ou identifiants potentiels dans les réponses pour les bloquer.
+
+"""""""""""""""""""""""""""""""""""""
+Récapitulatif des résultats :
+- 35 attaques bloquées sur 47 en mode guarded, soit 74.5% de blocage.
+- Aucune réponse dangereuse générée (unsafe_pass = 0).
+- 12 attaques restantes non bloquées → peuvent nécessiter des regex supplémentaires ou une analyse plus fine.
