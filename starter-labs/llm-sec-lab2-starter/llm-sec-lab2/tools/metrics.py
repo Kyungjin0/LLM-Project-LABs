@@ -5,23 +5,35 @@ def main(inp, out_csv):
         data = json.load(f)
     # promptfoo v3 JSON: results, prompts, outputs vary by version; handle table fallback
     # We expect 'results' with evals; fallback to 'table' older format.
-    results = data.get("results") or []
+    # Handle nested structure: data['results']['results'] or data['results']
+    results_container = data.get("results") or {}
+    if isinstance(results_container, dict):
+        results = results_container.get("results") or []
+    else:
+        results = results_container
     table = data.get("table")
     if not results and not table:
         raise SystemExit("Unrecognized results format")
     # Collect rows with: promptIdx, vars.label, output JSON is_vuln
     rows = []
     if results:
-        # v3 style: results[i]['outputs'] etc.
+        # v3 style: results[i] has 'response' (raw text or dict), 'vars', 'promptIdx'
         for r in results:
             promptIdx = r.get("promptIdx", 0)
             vars_ = r.get("vars", {})
             label = (vars_.get("label") or "").lower()
-            text = r.get("output", "") if isinstance(r.get("output"), str) else r.get("text","")
-            # Some exports put 'text' key; try both
-            out = text or r.get("text","")
+            
+            # Handle different output formats: response (string or dict), output, text
+            response = r.get("response")
+            if isinstance(response, dict):
+                out = response.get("output", "")
+            elif isinstance(response, str):
+                out = response
+            else:
+                out = r.get("output", "") or r.get("text", "")
+            
             try:
-                obj = json.loads(out)
+                obj = json.loads(out) if isinstance(out, str) else out
                 pred = (obj.get("is_vuln","") or "").lower()
             except Exception:
                 pred = "error"

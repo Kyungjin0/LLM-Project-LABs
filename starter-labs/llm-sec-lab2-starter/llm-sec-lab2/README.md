@@ -5,13 +5,15 @@ Lab 2 — Secure Code Review Prompts + Eval (Promptfoo + Gemini)
 **Goal.** Compare a naïve vs a secure-review prompt on 30 seeded code snippets. Produce JSON-only outputs and compute Precision/Recall/F1.
 
 ## Quick start
-1) **Prereqs**: Node.js 18+, Python 3.9+, a Gemini API key (free via Google AI Studio).
+1) **Prereqs**: Node.js 22+ LTS, Python 3.11+ (3.11-3.13 supported), a Gemini API key (free via Google AI Studio).
 2) **Install**:
 ```bash
-npm i -g promptfoo@latest            # or: npx promptfoo@latest eval
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env                 # put your Gemini key here
+# From repo root (llm-course/)
+make install                           # Creates .venv at repo root
+source .venv/bin/activate
+cp .env.example .env                   # put your Gemini key here
+npm i -g promptfoo@latest              # or: npx promptfoo@latest eval
+cd labs/lab2
 ```
 3) **Run eval**:
 ```bash
