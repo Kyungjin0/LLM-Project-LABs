@@ -43,7 +43,7 @@ MAX_CONSECUTIVE_FAILURES = 2
 
 def load_tests(test_file="_generated/tests_flat.yaml"):
     """Load all tests from the YAML file."""
-    with open(test_file, 'r') as f:
+    with open(test_file, 'r', encoding='utf-8') as f:
         tests = yaml.safe_load(f)
     return tests
 
@@ -61,7 +61,7 @@ def create_batch_file(batch, batch_num, output_dir="_generated"):
     os.makedirs(output_dir, exist_ok=True)
     batch_file = os.path.join(output_dir, f"batch_{batch_num:02d}_temp.yaml")
     
-    with open(batch_file, 'w') as f:
+    with open(batch_file, 'w', encoding='utf-8') as f:
         yaml.dump(batch, f, default_flow_style=False, allow_unicode=True)
     
     return batch_file
@@ -73,7 +73,7 @@ def create_batch_config(base_config, batch_file, batch_num, output_dir="reports/
     config_file = os.path.join(output_dir, f"_temp_config_batch_{batch_num:02d}.yaml")
     
     # Load the config as YAML to properly extract non-test sections
-    with open(base_config, 'r') as f:
+    with open(base_config, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     
     # Remove inline tests - we'll point to the batch file instead
@@ -106,7 +106,7 @@ def create_batch_config(base_config, batch_file, batch_num, output_dir="reports/
     config['tests'] = f'file://{batch_file_abs}'
     
     # Write the new config
-    with open(config_file, 'w') as f:
+    with open(config_file, 'w', encoding='utf-8') as f:
         yaml.dump(config, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
     
     return config_file
@@ -118,7 +118,7 @@ def check_api_errors(output_json):
         if not os.path.exists(output_json):
             return None, 0, 0
         
-        with open(output_json, 'r') as f:
+        with open(output_json, 'r', encoding='utf-8') as f:
             data = json.load(f)
             results = data.get('results', {}).get('results', [])
             
@@ -155,7 +155,7 @@ def run_batch(config_file, batch_num, output_dir="reports/batches", timeout_seco
     output_html = os.path.join(output_dir, f"batch_{batch_num:02d}_report.html")
     
     cmd = [
-        "npx", "promptfoo", "eval",
+        "npx.cmd" if os.name == 'nt' else "npx", "promptfoo", "eval",
         "-c", config_file,
         "-o", output_json,
         "-o", output_html
@@ -302,7 +302,7 @@ def _save_partial_and_exit(results, batch_num, total_batches, args):
     """Save partial results and exit with helpful message."""
     os.makedirs("reports/batches", exist_ok=True)
     summary_file = "reports/batches/batch_summary_partial.json"
-    with open(summary_file, 'w') as f:
+    with open(summary_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2)
     
     print(f"\n{'='*70}")
@@ -351,7 +351,7 @@ def main():
         # Load tests from the config file itself
         print(f"📂 Loading inline tests from {args.config}...")
         try:
-            with open(args.config, 'r') as f:
+            with open(args.config, 'r', encoding='utf-8') as f:
                 config = yaml.safe_load(f)
             tests = config.get('tests', [])
             print(f"✅ Found {len(tests)} inline tests in config")
@@ -521,7 +521,7 @@ def main():
     
     # Save summary
     summary_file = "reports/batches/batch_summary.json"
-    with open(summary_file, 'w') as f:
+    with open(summary_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2)
     print(f"📄 Summary saved to: {summary_file}\n")
     
