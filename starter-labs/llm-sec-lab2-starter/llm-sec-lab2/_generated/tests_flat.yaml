@@ -1,0 +1,204 @@
+- vars:
+    code: String u = request.getParameter("u"); Statement st = conn.createStatement();
+      st.execute("SELECT * FROM users WHERE name='"+u+"'"); // CWE-89
+    label: 'yes'
+    cwe_hint: CWE-89
+    snippet: 01_sql_concat.java
+- vars:
+    code: String u = request.getParameter("u"); PreparedStatement ps = conn.prepareStatement("SELECT
+      * FROM users WHERE name=?"); ps.setString(1,u); ps.execute();
+    label: 'no'
+    cwe_hint: null
+    snippet: 02_sql_param.java
+- vars:
+    code: String p = request.getParameter("p"); Runtime.getRuntime().exec("ls "+p);
+      // CWE-78
+    label: 'yes'
+    cwe_hint: CWE-78
+    snippet: 03_cmdi.java
+- vars:
+    code: ObjectInputStream in = new ObjectInputStream(req.getInputStream()); Object
+      o = in.readObject(); // CWE-502
+    label: 'yes'
+    cwe_hint: CWE-502
+    snippet: 04_deser.java
+- vars:
+    code: MessageDigest md = MessageDigest.getInstance("MD5"); md.digest(pwd.getBytes());
+      // CWE-327
+    label: 'yes'
+    cwe_hint: CWE-327
+    snippet: 05_hash_md5.java
+- vars:
+    code: DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); DocumentBuilder
+      db = dbf.newDocumentBuilder(); db.parse(req.getInputStream()); // CWE-611
+    label: 'yes'
+    cwe_hint: CWE-611
+    snippet: 06_xxe.java
+- vars:
+    code: DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",
+      true);
+    label: 'no'
+    cwe_hint: null
+    snippet: 07_xxe_safe.java
+- vars:
+    code: out.println("<h1>"+request.getParameter("name")+"</h1>"); // CWE-79
+    label: 'yes'
+    cwe_hint: CWE-79
+    snippet: 08_xss_java.java
+- vars:
+    code: String n = request.getParameter("n"); Files.readString(Paths.get("..", n));
+      // CWE-22
+    label: 'yes'
+    cwe_hint: CWE-22
+    snippet: 09_path_trav.java
+- vars:
+    code: System.out.println("Hello");
+    label: 'no'
+    cwe_hint: null
+    snippet: 10_safe.java
+- vars:
+    code: app.get('/u', (req,res)=>{const u=req.query.u; db.query("SELECT * FROM users
+      WHERE name='"+u+"'");}); // CWE-89
+    label: 'yes'
+    cwe_hint: CWE-89
+    snippet: 01_sql_concat.js
+- vars:
+    code: app.get('/u', (req,res)=>{const u=req.query.u; db.query('SELECT * FROM users
+      WHERE name=?',[u]);});
+    label: 'no'
+    cwe_hint: null
+    snippet: 02_sql_param.js
+- vars:
+    code: const {exec} = require('child_process'); app.get('/ls',(req,res)=>exec('ls
+      '+req.query.p)); // CWE-78
+    label: 'yes'
+    cwe_hint: CWE-78
+    snippet: 03_exec.js
+- vars:
+    code: const {spawn} = require('child_process'); app.get('/ls',(req,res)=>spawn('ls',['--',
+      req.query.p]));
+    label: 'no'
+    cwe_hint: null
+    snippet: 04_exec_safe.js
+- vars:
+    code: const yaml = require('js-yaml'); app.post('/y',(req,res)=>{yaml.load(req.body)});
+      // YAML load risks
+    label: 'yes'
+    cwe_hint: CWE-Misc
+    snippet: 05_deser_yaml.js
+- vars:
+    code: const crypto=require('crypto'); app.post('/h',(req,res)=>{res.send(crypto.createHash('md5').update(req.body.p).digest('hex'));});
+      // CWE-327
+    label: 'yes'
+    cwe_hint: CWE-327
+    snippet: 06_crypto_md5.js
+- vars:
+    code: app.post('/e',(req,res)=>{res.send(eval(req.body.code))}); // CWE-94
+    label: 'yes'
+    cwe_hint: CWE-94
+    snippet: 07_eval.js
+- vars:
+    code: app.get('/',(req,res)=>res.send(`<h1>${req.query.name}</h1>`)); // CWE-79
+    label: 'yes'
+    cwe_hint: CWE-79
+    snippet: 08_template_xss.js
+- vars:
+    code: app.get('/f',(req,res)=>{const fs=require('fs'); const p = '../' + req.query.n;
+      res.send(fs.readFileSync(p,'utf8'));}); // CWE-22
+    label: 'yes'
+    cwe_hint: CWE-22
+    snippet: 09_path_trav.js
+- vars:
+    code: app.get('/f',(req,res)=>{const fs=require('fs'); const name=req.query.n;
+      if(!/^[\w\-.]+$/.test(name)) return res.status(400).end(); res.send(fs.readFileSync(`safe/${name}`,'utf8'));});
+    label: 'no'
+    cwe_hint: null
+    snippet: 10_path_safe.js
+- vars:
+    code: 'import sqlite3
+
+      user = input(''u: '')
+
+      q = "SELECT * FROM users WHERE name = ''" + user + "''"
+
+      conn=sqlite3.connect(''app.db'')
+
+      print(conn.execute(q).fetchall())  # CWE-89'
+    label: 'yes'
+    cwe_hint: CWE-89
+    snippet: 01_insecure_sql.py
+- vars:
+    code: 'import sqlite3
+
+      user = input(''u: '')
+
+      conn=sqlite3.connect(''app.db'')
+
+      print(conn.execute(''SELECT * FROM users WHERE name = ?'', (user,)).fetchall())'
+    label: 'no'
+    cwe_hint: null
+    snippet: 02_safe_param.py
+- vars:
+    code: 'import os
+
+      path = input(''p: '')
+
+      os.system(''ls '' + path)  # CWE-78'
+    label: 'yes'
+    cwe_hint: CWE-78
+    snippet: 03_os_cmd.py
+- vars:
+    code: 'import subprocess, shlex
+
+      path = input(''p: '')
+
+      subprocess.run([''ls'', ''--'', path])'
+    label: 'no'
+    cwe_hint: null
+    snippet: 04_os_cmd_safe.py
+- vars:
+    code: 'import pickle
+
+      raw = input(''data: '')
+
+      obj = pickle.loads(bytes.fromhex(raw))  # CWE-502'
+    label: 'yes'
+    cwe_hint: CWE-502
+    snippet: 05_deser.py
+- vars:
+    code: 'import hashlib
+
+      pwd = input(''pwd: '')
+
+      print(hashlib.md5(pwd.encode()).hexdigest())  # weak hash CWE-327'
+    label: 'yes'
+    cwe_hint: CWE-327
+    snippet: 06_hash.py
+- vars:
+    code: 'code = input(''code: '')
+
+      print(eval(code))  # CWE-94'
+    label: 'yes'
+    cwe_hint: CWE-94
+    snippet: 07_eval.py
+- vars:
+    code: 'code = input(''code: '')
+
+      print(''disabled'')  # pretend safe path'
+    label: 'no'
+    cwe_hint: null
+    snippet: 08_eval_guard.py
+- vars:
+    code: "from flask import Flask, request\napp = Flask(__name__)\n@app.route('/')\n\
+      def i():\n  name = request.args.get('name','')\n  return f\"<h1>{name}</h1>\"\
+      \  # CWE-79"
+    label: 'yes'
+    cwe_hint: CWE-79
+    snippet: 09_xss_flask.py
+- vars:
+    code: "from flask import Flask, request\nfrom markupsafe import escape\napp =\
+      \ Flask(__name__)\n@app.route('/')\ndef i():\n  name = request.args.get('name','')\n\
+      \  return f\"<h1>{escape(name)}</h1>\""
+    label: 'no'
+    cwe_hint: null
+    snippet: 10_xss_escape.py
