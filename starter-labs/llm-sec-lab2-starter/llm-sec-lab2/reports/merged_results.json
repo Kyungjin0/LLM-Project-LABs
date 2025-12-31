@@ -10,18 +10,18 @@
         "id": "91992723bbeac4d789d5721308c1a3fd480fa001b967d8261a710bd633dca163",
         "provider": "gemini-batch-free",
         "metrics": {
-          "score": 28,
-          "testPassCount": 28,
+          "score": 29,
+          "testPassCount": 29,
           "testFailCount": 0,
-          "testErrorCount": 2,
+          "testErrorCount": 1,
           "assertPassCount": 0,
           "assertFailCount": 0,
-          "totalLatencyMs": 645081,
+          "totalLatencyMs": 347470,
           "namedScores": {
-            "accuracy": 28
+            "accuracy": 29
           },
           "namedScoresCount": {
-            "accuracy": 28
+            "accuracy": 29
           }
         }
       }
@@ -2359,11 +2359,44 @@
       },
       {
         "cost": 0,
-        "error": "API call error: Error: Request failed after 4 retries: Rate limited: 429 Too Many Requests",
-        "gradingResult": null,
-        "id": "e46ce05d-2297-4ce1-bce5-7d1037b9d844",
-        "latencyMs": 301272,
-        "namedScores": {},
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\u2705 Correct classification: yes (CWE: CWE-22)",
+              "metadata": {
+                "renderedAssertionValue": "const expected = 'yes';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `\u2705 Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `\u274c WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   \ud83d\udca1 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+              }
+            }
+          ]
+        },
+        "id": "c2d663c0-9589-4b08-845d-8b81bfbf0d00",
+        "latencyMs": 3677,
+        "namedScores": {
+          "accuracy": 1
+        },
         "prompt": {
           "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\napp.get('/f',(req,res)=>{const fs=require('fs'); const p = '../' + req.query.n; res.send(fs.readFileSync(p,'utf8'));}); // CWE-22\\n>>>\\n\\nRespond with the JSON object only:\"\n  }\n]",
           "label": "prompts\\secure_review_chat.json: [{\"role\":\"system\",\"content\":\"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"},{\"role\":\"user\",\"content\":\"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\n{{code}}\\n>>>\\n\\nRespond with the JSON object only:\"}]"
@@ -2375,10 +2408,53 @@
           "label": "gemini-batch-free"
         },
         "response": {
-          "error": "API call error: Error: Request failed after 4 retries: Rate limited: 429 Too Many Requests"
+          "output": "{\"is_vuln\": \"yes\", \"cwe\": \"CWE-22\", \"title\": \"Directory Traversal via user-controlled path\", \"rationale\": \"The application constructs a file path by concatenating a hardcoded `../` prefix with user-supplied input from `req.query.n`. This allows an attacker to traverse directories and read arbitrary files on the server's filesystem.\"}",
+          "tokenUsage": {
+            "prompt": 206,
+            "completion": 86,
+            "total": 823,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 531,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            }
+          },
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"is_vuln\": \"yes\", \"cwe\": \"CWE-22\", \"title\": \"Directory Traversal via user-controlled path\", \"rationale\": \"The application constructs a file path by concatenating a hardcoded `../` prefix with user-supplied input from `req.query.n`. This allows an attacker to traverse directories and read arbitrary files on the server's filesystem.\"}"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 206,
+              "candidatesTokenCount": 86,
+              "totalTokenCount": 823,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 206
+                }
+              ],
+              "thoughtsTokenCount": 531
+            },
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "dmFVacWfJN-znsEPiazt0Qg"
+          },
+          "cached": false,
+          "metadata": {}
         },
-        "score": 0,
-        "success": false,
+        "score": 1,
+        "success": true,
         "testCase": {
           "vars": {
             "code": "app.get('/f',(req,res)=>{const fs=require('fs'); const p = '../' + req.query.n; res.send(fs.readFileSync(p,'utf8'));}); // CWE-22",
@@ -2409,14 +2485,14 @@
         "metadata": {
           "_promptfooFileMetadata": {}
         },
-        "failureReason": 2
+        "failureReason": 0
       },
       {
         "cost": 0,
         "error": "API call error: Error: Request failed after 4 retries: Rate limited: 429 Too Many Requests",
         "gradingResult": null,
-        "id": "6e9d7838-3a48-4a32-85e8-d6ab10c6709e",
-        "latencyMs": 301414,
+        "id": "2167329c-915e-4718-bbdb-5d3b9dcfa004",
+        "latencyMs": 301398,
         "namedScores": {},
         "prompt": {
           "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\napp.get('/f',(req,res)=>{const fs=require('fs'); const name=req.query.n; if(!/^[\\\\w\\\\-.]+$/.test(name)) return res.status(400).end(); res.send(fs.readFileSync(`safe/${name}`,'utf8'));});\\n>>>\\n\\nRespond with the JSON object only:\"\n  }\n]",
@@ -3767,14 +3843,14 @@
       }
     ],
     "stats": {
-      "successes": 28,
+      "successes": 29,
       "failures": 0,
-      "errors": 2,
+      "errors": 1,
       "tokenUsage": {
-        "prompt": 3486,
-        "completion": 1449,
+        "prompt": 3692,
+        "completion": 1535,
         "cached": 5538,
-        "total": 16248,
+        "total": 17071,
         "numRequests": 0,
         "completionDetails": {
           "reasoning": 401,

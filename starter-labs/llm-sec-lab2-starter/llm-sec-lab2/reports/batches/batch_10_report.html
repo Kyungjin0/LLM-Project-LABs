@@ -66,11 +66,15 @@
           
           <td data-content="09_path_trav.js">09_path_trav.js</td>
           
-          <td data-content="[ERROR] (0.00)
+          <td data-content="[PASS] (1.00, accuracy: 1.00)
 
-API call error: Error: Request failed after 4 retries: Rate limited: 429 Too Many Requests">[ERROR] (0.00)
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-22&quot;, &quot;title&quot;: &quot;Directory Traversal via user-controlled path&quot;, &quot;rationale&quot;: &quot;The application constructs a file path by concatenating a hardcoded `../` prefix with user-supplied input from `req.query.n`. This allows an attacker to traverse directories and read arbitrary files on the server&#39;s filesystem.&quot;}
 
-API call error: Error: Request failed after 4 retries: Rate limited: 429 Too Many Requests</td>
+Pass Reason: All assertions passed">[PASS] (1.00, accuracy: 1.00)
+
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-22&quot;, &quot;title&quot;: &quot;Directory Traversal via user-controlled path&quot;, &quot;rationale&quot;: &quot;The application constructs a file path by concatenating a hardcoded `../` prefix with user-supplied input from `req.query.n`. This allows an attacker to traverse directories and read arbitrary files on the server&#39;s filesystem.&quot;}
+
+Pass Reason: All assertions passed</td>
           
         </tr>
         

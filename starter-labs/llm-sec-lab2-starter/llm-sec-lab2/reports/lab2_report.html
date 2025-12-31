@@ -178,8 +178,8 @@
             <td>19</td>
             <td><pre>app.get(&#x27;/f&#x27;,(req,res)=&gt;{const fs=require(&#x27;fs&#x27;); const p = &#x27;../&#x27; + req.query.n; res.send(fs.readFileSync(p,&#x27;utf8&#x27;));}); // CWE-22</pre></td>
             <td>yes</td>
-            <td><pre></pre></td>
-            <td class="fail">FAIL</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-22&quot;, &quot;title&quot;: &quot;Directory Traversal via user-controlled path&quot;, &quot;rationale&quot;: &quot;The application constructs a file path by concatenating a hardcoded `../` prefix with user-supplied input from `req.query.n`. This allows an attacker to traverse directories and read arbitrary files on the server&#x27;s filesystem.&quot;}</pre></td>
+            <td class="pass">PASS</td>
         </tr>
 
         <tr>
