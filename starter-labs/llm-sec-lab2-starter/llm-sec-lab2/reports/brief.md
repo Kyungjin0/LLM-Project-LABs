@@ -1,4 +1,4 @@
-# Lab 2 Analysis Brief: Secure Code Review Evaluation
+# Lab 2 Analysis Brief
 
 **Authors:** MAZERAT Hugo, SINGHAVARA Enzo, ZHANG Anthony
 
