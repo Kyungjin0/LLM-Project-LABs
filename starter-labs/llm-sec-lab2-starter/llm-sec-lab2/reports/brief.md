@@ -32,7 +32,7 @@ Initialement, le modèle a montré une tendance "paranoïaque" sur certains patt
 
 ## 3. False Negatives
 
-Sur l'ensemble des 28 tests validés, **aucun faux négatif** n'a été détecté.
+Sur l'ensemble des 29 tests validés, **aucun faux négatif** n'a été détecté.
 Le modèle a identifié toutes les catégories CWE testées :
 * **Injection SQL** (Java/Python) : Distinction correcte entre concaténation et requêtes paramétrées.
 * **XSS** (JavaScript/Python) : Identification des sorties non échappées.
