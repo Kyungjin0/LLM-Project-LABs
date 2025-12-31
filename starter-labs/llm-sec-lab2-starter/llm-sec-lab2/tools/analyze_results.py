@@ -28,7 +28,7 @@ def load_batch_results(batch_num: int) -> dict:
     filepath = f"reports/batches/batch_{batch_num:02d}_results.json"
     if not os.path.exists(filepath):
         return None
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
@@ -105,7 +105,7 @@ def print_comprehensive_analysis():
         batch_num = int(batch_file.split('batch_')[1].split('_')[0])
         
         try:
-            with open(batch_file, 'r') as f:
+            with open(batch_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 results = data.get('results', {}).get('results', [])
         except Exception as e:
@@ -210,7 +210,7 @@ def print_failure_details():
         batch_num = int(batch_file.split('batch_')[1].split('_')[0])
         
         try:
-            with open(batch_file, 'r') as f:
+            with open(batch_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 results = data.get('results', {}).get('results', [])
         except Exception:

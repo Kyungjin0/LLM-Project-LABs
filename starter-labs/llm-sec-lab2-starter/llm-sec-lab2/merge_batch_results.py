@@ -19,7 +19,7 @@ from pathlib import Path
 
 def load_batch_result(file_path):
     """Load a single batch result JSON file."""
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
@@ -114,7 +114,7 @@ def merge_results(batch_files, output_file="reports/merged_results.json"):
     
     # Save merged results
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(merged, f, indent=2)
     
     print(f"\n{'='*70}")

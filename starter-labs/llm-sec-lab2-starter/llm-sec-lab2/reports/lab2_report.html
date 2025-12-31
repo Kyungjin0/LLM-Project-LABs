@@ -1,0 +1,304 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Lab 2 Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        table { border: 1px solid #ccc; border-collapse: collapse; width: 100%; text-align: left; table-layout: fixed;}
+        th, td { border: 1px solid #ccc; padding: 10px; word-wrap: break-word; vertical-align: top; }
+        th { background-color: #f4f4f4; }
+        .pass { color: green; font-weight: bold; }
+        .fail { color: #d32f2f; font-weight: bold; }
+        .error { color: #e65100; font-weight: bold; }
+        pre { white-space: pre-wrap; background: #f8f8f8; padding: 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Lab 2 Evaluation Report</h1>
+    <p><strong>Total Tests:</strong> 30</p>
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 5%">ID</th>
+            <th style="width: 30%">Code Snippet</th>
+            <th style="width: 10%">Expected</th>
+            <th style="width: 45%">Model Response</th>
+            <th style="width: 10%">Status</th>
+        </tr>
+        </thead>
+    <tbody>
+
+        <tr>
+            <td>1</td>
+            <td><pre>String u = request.getParameter(&quot;u&quot;); Statement st = conn.createStatement(); st.execute(&quot;SELECT * FROM users WHERE name=&#x27;&quot;+u+&quot;&#x27;&quot;); // CWE-89</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-89&quot;, &quot;title&quot;: &quot;SQL Injection via unsanitized request parameter&quot;, &quot;rationale&quot;: &quot;The user-controlled input &#x27;u&#x27; is directly concatenated into the SQL query string without any sanitization or use of prepared statements, making the application vulnerable to SQL injection attacks.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td><pre>String u = request.getParameter(&quot;u&quot;); PreparedStatement ps = conn.prepareStatement(&quot;SELECT * FROM users WHERE name=?&quot;); ps.setString(1,u); ps.execute();</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No SQL Injection Vulnerability&quot;, &quot;rationale&quot;: &quot;The code uses a PreparedStatement with a parameterized query, where user input &#x27;u&#x27; is set as a string parameter. This correctly separates data from the SQL query structure, preventing SQL injection.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>3</td>
+            <td><pre>String p = request.getParameter(&quot;p&quot;); Runtime.getRuntime().exec(&quot;ls &quot;+p); // CWE-78</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-78&quot;, &quot;title&quot;: &quot;OS Command Injection&quot;, &quot;rationale&quot;: &quot;The application directly concatenates user-controlled input from the &#x27;p&#x27; request parameter into an OS command executed by Runtime.getRuntime().exec(). This allows an attacker to inject arbitrary commands by manipulating the &#x27;p&#x27; parameter.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td><pre>ObjectInputStream in = new ObjectInputStream(req.getInputStream()); Object o = in.readObject(); // CWE-502</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-502&quot;, &quot;title&quot;: &quot;Deserialization of Untrusted Data&quot;, &quot;rationale&quot;: &quot;The use of `ObjectInputStream.readObject()` with input from an untrusted source (`req.getInputStream()`) allows an attacker to provide specially crafted serialized objects. Deserializing these objects can lead to arbitrary code execution on the server, a critical vulnerability.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>5</td>
+            <td><pre>MessageDigest md = MessageDigest.getInstance(&quot;MD5&quot;); md.digest(pwd.getBytes()); // CWE-327</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-327&quot;, &quot;title&quot;: &quot;Use of broken cryptographic algorithm (MD5)&quot;, &quot;rationale&quot;: &quot;The code explicitly uses MD5, which is a cryptographically broken hash function and is not suitable for security-sensitive operations due to known collision vulnerabilities.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>6</td>
+            <td><pre>DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); DocumentBuilder db = dbf.newDocumentBuilder(); db.parse(req.getInputStream()); // CWE-611</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-611&quot;, &quot;title&quot;: &quot;XML External Entity (XXE) Injection&quot;, &quot;rationale&quot;: &quot;The code uses DocumentBuilder to parse XML input from an untrusted source without disabling external entity processing. This default configuration allows for XML External Entity (XXE) attacks, enabling an attacker to read local files, perform server-side request forgery, or cause denial of service.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>7</td>
+            <td><pre>DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); dbf.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;XML Parser Configured to Disallow DOCTYPE Declarations&quot;, &quot;rationale&quot;: &quot;The code explicitly sets the &#x27;disallow-doctype-decl&#x27; feature to true, which is a security best practice. This configuration prevents the processing of DOCTYPE declarations, effectively mitigating XML External Entity (XXE) vulnerabilities.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>8</td>
+            <td><pre>out.println(&quot;&lt;h1&gt;&quot;+request.getParameter(&quot;name&quot;)+&quot;&lt;/h1&gt;&quot;); // CWE-79</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-79&quot;, &quot;title&quot;: &quot;Reflected Cross-Site Scripting (XSS)&quot;, &quot;rationale&quot;: &quot;The &#x27;name&#x27; request parameter is directly embedded into the HTML output without proper sanitization or encoding. An attacker can inject malicious scripts or HTML, leading to a Cross-Site Scripting (XSS) vulnerability.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>9</td>
+            <td><pre>String n = request.getParameter(&quot;n&quot;); Files.readString(Paths.get(&quot;..&quot;, n)); // CWE-22</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-22&quot;, &quot;title&quot;: &quot;Path Traversal via user-controlled filename&quot;, &quot;rationale&quot;: &quot;The application uses an unvalidated user input &#x27;n&#x27; directly in `Paths.get()` to construct a file path. An attacker can manipulate &#x27;n&#x27; with directory traversal sequences (e.g., &#x27;..&#x27;) to read arbitrary files outside the intended directory.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>10</td>
+            <td><pre>System.out.println(&quot;Hello&quot;);</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No vulnerability found&quot;, &quot;rationale&quot;: &quot;The code simply prints a static string to the console. It does not process any external input, perform sensitive operations, or interact with external resources, thus posing no security risk.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>11</td>
+            <td><pre>app.get(&#x27;/u&#x27;, (req,res)=&gt;{const u=req.query.u; db.query(&quot;SELECT * FROM users WHERE name=&#x27;&quot;+u+&quot;&#x27;&quot;);}); // CWE-89</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-89&quot;, &quot;title&quot;: &quot;SQL Injection via unparameterized query&quot;, &quot;rationale&quot;: &quot;The user-controlled input `req.query.u` is directly concatenated into an SQL query string without proper sanitization or parameterization, allowing an attacker to inject arbitrary SQL commands.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>12</td>
+            <td><pre>app.get(&#x27;/u&#x27;, (req,res)=&gt;{const u=req.query.u; db.query(&#x27;SELECT * FROM users WHERE name=?&#x27;,[u]);});</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No SQL Injection Vulnerability&quot;, &quot;rationale&quot;: &quot;The code uses a parameterized query `db.query(&#x27;SELECT * FROM users WHERE name=?&#x27;,[u])`, which correctly separates the SQL command from user-supplied data. This prevents SQL injection by ensuring the database driver handles the escaping of the `u` variable.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>13</td>
+            <td><pre>const {exec} = require(&#x27;child_process&#x27;); app.get(&#x27;/ls&#x27;,(req,res)=&gt;exec(&#x27;ls &#x27;+req.query.p)); // CWE-78</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-78&quot;, &quot;title&quot;: &quot;OS Command Injection via unsanitized user input&quot;, &quot;rationale&quot;: &quot;The application directly concatenates user-controlled input from `req.query.p` into an OS command executed via `child_process.exec`. This allows an attacker to inject arbitrary shell commands, leading to OS command injection.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>14</td>
+            <td><pre>const {spawn} = require(&#x27;child_process&#x27;); app.get(&#x27;/ls&#x27;,(req,res)=&gt;spawn(&#x27;ls&#x27;,[&#x27;--&#x27;, req.query.p]));</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No command injection due to safe argument handling&quot;, &quot;rationale&quot;: &quot;The `spawn` function is used with the command and arguments provided as separate array elements, preventing shell injection. Additionally, the `--` argument is used before `req.query.p`, ensuring that user input is treated as a filename/path and not as command-line options, mitigating argument injection.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>15</td>
+            <td><pre>const yaml = require(&#x27;js-yaml&#x27;); app.post(&#x27;/y&#x27;,(req,res)=&gt;{yaml.load(req.body)}); // YAML load risks</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-502&quot;, &quot;title&quot;: &quot;YAML Deserialization of Untrusted Data&quot;, &quot;rationale&quot;: &quot;The application directly passes untrusted user input from `req.body` to `yaml.load()`. This can lead to denial of service (DoS) through resource exhaustion or, depending on the YAML content and parser configuration, potentially arbitrary code execution.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>16</td>
+            <td><pre>const crypto=require(&#x27;crypto&#x27;); app.post(&#x27;/h&#x27;,(req,res)=&gt;{res.send(crypto.createHash(&#x27;md5&#x27;).update(req.body.p).digest(&#x27;hex&#x27;));}); // CWE-327</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-327&quot;, &quot;title&quot;: &quot;Use of MD5 for cryptographic hashing&quot;, &quot;rationale&quot;: &quot;The code uses MD5, a cryptographically broken hash function, to process user-supplied data. MD5 is vulnerable to collision attacks and is not suitable for security-sensitive operations like password hashing or integrity checks.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>17</td>
+            <td><pre>app.post(&#x27;/e&#x27;,(req,res)=&gt;{res.send(eval(req.body.code))}); // CWE-94</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-94&quot;, &quot;title&quot;: &quot;Server-Side Code Injection via eval()&quot;, &quot;rationale&quot;: &quot;The application uses `eval()` on user-controlled input from `req.body.code`. This allows an attacker to execute arbitrary code on the server by sending malicious JavaScript code in the request body.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>18</td>
+            <td><pre>app.get(&#x27;/&#x27;,(req,res)=&gt;res.send(`&lt;h1&gt;${req.query.name}&lt;/h1&gt;`)); // CWE-79</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-79&quot;, &quot;title&quot;: &quot;Reflected Cross-Site Scripting (XSS)&quot;, &quot;rationale&quot;: &quot;The application directly embeds user-supplied input from `req.query.name` into the HTML response without proper sanitization or encoding, allowing an attacker to inject arbitrary client-side scripts.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>19</td>
+            <td><pre>app.get(&#x27;/f&#x27;,(req,res)=&gt;{const fs=require(&#x27;fs&#x27;); const p = &#x27;../&#x27; + req.query.n; res.send(fs.readFileSync(p,&#x27;utf8&#x27;));}); // CWE-22</pre></td>
+            <td>yes</td>
+            <td><pre></pre></td>
+            <td class="fail">FAIL</td>
+        </tr>
+
+        <tr>
+            <td>20</td>
+            <td><pre>app.get(&#x27;/f&#x27;,(req,res)=&gt;{const fs=require(&#x27;fs&#x27;); const name=req.query.n; if(!/^[\w\-.]+$/.test(name)) return res.status(400).end(); res.send(fs.readFileSync(`safe/${name}`,&#x27;utf8&#x27;));});</pre></td>
+            <td>no</td>
+            <td><pre></pre></td>
+            <td class="fail">FAIL</td>
+        </tr>
+
+        <tr>
+            <td>21</td>
+            <td><pre>import sqlite3
+user = input(&#x27;u: &#x27;)
+q = &quot;SELECT * FROM users WHERE name = &#x27;&quot; + user + &quot;&#x27;&quot;
+conn=sqlite3.connect(&#x27;app.db&#x27;)
+print(conn.execute(q).fetchall())  # CWE-89</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-89&quot;, &quot;title&quot;: &quot;SQL Injection via unescaped user input&quot;, &quot;rationale&quot;: &quot;The SQL query is constructed by directly concatenating unescaped user input from `input()` into the query string. This allows an attacker to inject malicious SQL code, leading to SQL injection.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>22</td>
+            <td><pre>import sqlite3
+user = input(&#x27;u: &#x27;)
+conn=sqlite3.connect(&#x27;app.db&#x27;)
+print(conn.execute(&#x27;SELECT * FROM users WHERE name = ?&#x27;, (user,)).fetchall())</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No SQL Injection vulnerability&quot;, &quot;rationale&quot;: &quot;The code uses a parameterized query (prepared statement) with a placeholder (?) and passes the user input as a parameter. This correctly separates the SQL logic from the user-provided data, preventing SQL injection attacks.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>23</td>
+            <td><pre>import os
+path = input(&#x27;p: &#x27;)
+os.system(&#x27;ls &#x27; + path)  # CWE-78</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-78&quot;, &quot;title&quot;: &quot;OS Command Injection via user input&quot;, &quot;rationale&quot;: &quot;The `os.system()` function executes a shell command constructed with unsanitized user input. An attacker can inject arbitrary commands by providing shell metacharacters in the `path` variable, leading to OS command injection.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>24</td>
+            <td><pre>import subprocess, shlex
+path = input(&#x27;p: &#x27;)
+subprocess.run([&#x27;ls&#x27;, &#x27;--&#x27;, path])</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No command injection vulnerability&quot;, &quot;rationale&quot;: &quot;The `subprocess.run` function is used with a list of arguments, which prevents shell injection. Additionally, the `--` argument is used before the user-controlled path, ensuring that the path is treated as a literal argument to `ls` and not as additional options or commands.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>25</td>
+            <td><pre>import pickle
+raw = input(&#x27;data: &#x27;)
+obj = pickle.loads(bytes.fromhex(raw))  # CWE-502</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-502&quot;, &quot;title&quot;: &quot;Insecure deserialization with pickle&quot;, &quot;rationale&quot;: &quot;The code deserializes user-controlled input using `pickle.loads`. Deserializing untrusted data with pickle can lead to arbitrary code execution, making this a critical security vulnerability.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>26</td>
+            <td><pre>import hashlib
+pwd = input(&#x27;pwd: &#x27;)
+print(hashlib.md5(pwd.encode()).hexdigest())  # weak hash CWE-327</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-327&quot;, &quot;title&quot;: &quot;Use of Weak Cryptographic Hash Function (MD5)&quot;, &quot;rationale&quot;: &quot;The code uses MD5 for hashing, which is a cryptographically weak hash function. MD5 is susceptible to collision attacks and is not suitable for password storage or other security-sensitive applications.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>27</td>
+            <td><pre>code = input(&#x27;code: &#x27;)
+print(eval(code))  # CWE-94</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-094&quot;, &quot;title&quot;: &quot;Arbitrary Code Execution via eval()&quot;, &quot;rationale&quot;: &quot;The application directly passes user-controlled input to the `eval()` function. This allows an attacker to execute arbitrary Python code, leading to a severe code injection vulnerability.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>28</td>
+            <td><pre>code = input(&#x27;code: &#x27;)
+print(&#x27;disabled&#x27;)  # pretend safe path</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;Unused User Input&quot;, &quot;rationale&quot;: &quot;The code takes user input but does not use or execute it in any way. Therefore, there is no vulnerability as the input cannot influence the program&#x27;s behavior or lead to malicious actions.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>29</td>
+            <td><pre>from flask import Flask, request
+app = Flask(__name__)
+@app.route(&#x27;/&#x27;)
+def i():
+  name = request.args.get(&#x27;name&#x27;,&#x27;&#x27;)
+  return f&quot;&lt;h1&gt;{name}&lt;/h1&gt;&quot;  # CWE-79</pre></td>
+            <td>yes</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-79&quot;, &quot;title&quot;: &quot;Reflected Cross-Site Scripting (XSS)&quot;, &quot;rationale&quot;: &quot;The application directly embeds user-supplied input from the &#x27;name&#x27; request argument into the HTML response without any sanitization or encoding. This allows an attacker to inject arbitrary client-side scripts, leading to a Reflected Cross-Site Scripting vulnerability.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        <tr>
+            <td>30</td>
+            <td><pre>from flask import Flask, request
+from markupsafe import escape
+app = Flask(__name__)
+@app.route(&#x27;/&#x27;)
+def i():
+  name = request.args.get(&#x27;name&#x27;,&#x27;&#x27;)
+  return f&quot;&lt;h1&gt;{escape(name)}&lt;/h1&gt;&quot;</pre></td>
+            <td>no</td>
+            <td><pre>{&quot;is_vuln&quot;: &quot;no&quot;, &quot;cwe&quot;: null, &quot;title&quot;: &quot;No vulnerability found&quot;, &quot;rationale&quot;: &quot;The user input &#x27;name&#x27; is properly escaped using `markupsafe.escape()` before being rendered in the HTML response. This effectively prevents Cross-Site Scripting (XSS) attacks by converting special HTML characters into their safe entities.&quot;}</pre></td>
+            <td class="pass">PASS</td>
+        </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>
