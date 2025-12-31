@@ -13,7 +13,7 @@ providers:
 prompts:
 - file://C:\Users\esing\Generative-AI-in-Cybersecurity\LLM-Project-LABs\starter-labs\llm-sec-lab2-starter\llm-sec-lab2/prompts/secure_review_chat.json
 defaultTest:
-  transform: "output.replace(/```json/g, '').replace(/```/g, '').trim()"
+  transform: "output.split('\\\\w').join('w').split('\\\\-').join('-').split('\\\\.').join('.').replace(/```json/g, '').replace(/```/g, '').trim()"
   assert:
   - type: is-json
   - type: javascript
@@ -31,10 +31,10 @@ defaultTest:
       \ Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model\
       \ said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0,\
       \ 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\\
-      n` +\n            `   \U0001F4A1 FIX: Review prompt or provide better examples\
+      n` +\n            `   💡 FIX: Review prompt or provide better examples\
       \ for this vulnerability type`\n  };\n}\n"
 evaluateOptions:
   maxConcurrency: 1
-  delay: 5000
+  delay: 20000
   timeoutSeconds: 180
 tests: file://C:\Users\esing\Generative-AI-in-Cybersecurity\LLM-Project-LABs\starter-labs\llm-sec-lab2-starter\llm-sec-lab2\_generated\batch_10_temp.yaml
