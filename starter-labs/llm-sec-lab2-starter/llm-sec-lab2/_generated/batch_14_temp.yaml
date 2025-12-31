@@ -1,0 +1,14 @@
+- vars:
+    code: 'code = input(''code: '')
+
+      print(eval(code))  # CWE-94'
+    cwe_hint: CWE-94
+    label: 'yes'
+    snippet: 07_eval.py
+- vars:
+    code: 'code = input(''code: '')
+
+      print(''disabled'')  # pretend safe path'
+    cwe_hint: null
+    label: 'no'
+    snippet: 08_eval_guard.py

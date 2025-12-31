@@ -1,0 +1,12 @@
+- vars:
+    code: String p = request.getParameter("p"); Runtime.getRuntime().exec("ls "+p);
+      // CWE-78
+    cwe_hint: CWE-78
+    label: 'yes'
+    snippet: 03_cmdi.java
+- vars:
+    code: ObjectInputStream in = new ObjectInputStream(req.getInputStream()); Object
+      o = in.readObject(); // CWE-502
+    cwe_hint: CWE-502
+    label: 'yes'
+    snippet: 04_deser.java

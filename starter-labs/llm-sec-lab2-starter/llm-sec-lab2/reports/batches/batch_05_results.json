@@ -1,0 +1,421 @@
+{
+  "evalId": "eval-PpZ-2025-12-30T23:11:00",
+  "results": {
+    "version": 3,
+    "timestamp": "2025-12-30T23:11:00.840Z",
+    "prompts": [
+      {
+        "raw": "[{\"role\":\"system\",\"content\":\"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"},{\"role\":\"user\",\"content\":\"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\n{{code}}\\n>>>\\n\\nRespond with the JSON object only:\"}]",
+        "label": "prompts\\secure_review_chat.json: [{\"role\":\"system\",\"content\":\"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"},{\"role\":\"user\",\"content\":\"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\n{{code}}\\n>>>\\n\\nRespond with the JSON object only:\"}]",
+        "id": "91992723bbeac4d789d5721308c1a3fd480fa001b967d8261a710bd633dca163",
+        "provider": "gemini-batch-free",
+        "metrics": {
+          "score": 2,
+          "testPassCount": 2,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 4,
+          "assertFailCount": 0,
+          "totalLatencyMs": 12,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 1123,
+            "total": 1123,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 617,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0
+              }
+            }
+          },
+          "namedScores": {
+            "accuracy": 2
+          },
+          "namedScoresCount": {
+            "accuracy": 2
+          },
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "✅ Correct classification: yes (CWE: CWE-22)",
+              "metadata": {
+                "renderedAssertionValue": "const expected = 'yes';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   💡 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+              }
+            }
+          ]
+        },
+        "id": "41d4ee33-e4fd-4a17-9e72-f79607e9fb05",
+        "latencyMs": 10,
+        "namedScores": {
+          "accuracy": 1
+        },
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\nString n = request.getParameter(\\\"n\\\"); Files.readString(Paths.get(\\\"..\\\", n)); // CWE-22\\n>>>\\n\\nRespond with the JSON object only:\"\n  }\n]",
+          "label": "prompts\\secure_review_chat.json: [{\"role\":\"system\",\"content\":\"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"},{\"role\":\"user\",\"content\":\"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\n{{code}}\\n>>>\\n\\nRespond with the JSON object only:\"}]"
+        },
+        "promptId": "91992723bbeac4d789d5721308c1a3fd480fa001b967d8261a710bd633dca163",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.5-flash",
+          "label": "gemini-batch-free"
+        },
+        "response": {
+          "output": "{\"is_vuln\": \"yes\", \"cwe\": \"CWE-22\", \"title\": \"Path Traversal via user-controlled filename\", \"rationale\": \"The application uses an unvalidated user input 'n' directly in `Paths.get()` to construct a file path. An attacker can manipulate 'n' with directory traversal sequences (e.g., '..') to read arbitrary files outside the intended directory.\"}",
+          "tokenUsage": {
+            "cached": 668,
+            "total": 668,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 392,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            }
+          },
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"is_vuln\": \"yes\", \"cwe\": \"CWE-22\", \"title\": \"Path Traversal via user-controlled filename\", \"rationale\": \"The application uses an unvalidated user input 'n' directly in `Paths.get()` to construct a file path. An attacker can manipulate 'n' with directory traversal sequences (e.g., '..') to read arbitrary files outside the intended directory.\"}"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 185,
+              "candidatesTokenCount": 91,
+              "totalTokenCount": 668,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 185
+                }
+              ],
+              "thoughtsTokenCount": 392
+            },
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "vlVUaZesEr6qnsEPvZCc2AI"
+          },
+          "cached": true,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "code": "String n = request.getParameter(\"n\"); Files.readString(Paths.get(\"..\", n)); // CWE-22",
+            "cwe_hint": "CWE-22",
+            "label": "yes",
+            "snippet": "09_path_trav.java"
+          },
+          "assert": [
+            {
+              "type": "is-json"
+            },
+            {
+              "type": "javascript",
+              "metric": "accuracy",
+              "value": "const expected = '{{ label }}';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   💡 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "vars": {
+          "code": "String n = request.getParameter(\"n\"); Files.readString(Paths.get(\"..\", n)); // CWE-22",
+          "cwe_hint": "CWE-22",
+          "label": "yes",
+          "snippet": "09_path_trav.java"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "accuracy": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "✅ Correct classification: no (CWE: N/A)",
+              "metadata": {
+                "renderedAssertionValue": "const expected = 'no';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   💡 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+              }
+            }
+          ]
+        },
+        "id": "e5c66c91-79d8-4555-8299-1bde7e6c1483",
+        "latencyMs": 2,
+        "namedScores": {
+          "accuracy": 1
+        },
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\nSystem.out.println(\\\"Hello\\\");\\n>>>\\n\\nRespond with the JSON object only:\"\n  }\n]",
+          "label": "prompts\\secure_review_chat.json: [{\"role\":\"system\",\"content\":\"You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {\\\"is_vuln\\\": \\\"yes\\\" | \\\"no\\\", \\\"cwe\\\": \\\"CWE-###\\\" or null, \\\"title\\\": \\\"short finding title\\\", \\\"rationale\\\": \\\"1-3 sentences explaining why this is or is not a vulnerability\\\"}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.\"},{\"role\":\"user\",\"content\":\"Analyse the following code and fill the JSON object. If the code is safe, set \\\"is_vuln\\\": \\\"no\\\" and \\\"cwe\\\": null. Code:\\n<<<\\n{{code}}\\n>>>\\n\\nRespond with the JSON object only:\"}]"
+        },
+        "promptId": "91992723bbeac4d789d5721308c1a3fd480fa001b967d8261a710bd633dca163",
+        "promptIdx": 0,
+        "provider": {
+          "id": "google:gemini-2.5-flash",
+          "label": "gemini-batch-free"
+        },
+        "response": {
+          "output": "{\"is_vuln\": \"no\", \"cwe\": null, \"title\": \"No vulnerability found\", \"rationale\": \"The code simply prints a static string to the console. It does not process any external input, perform sensitive operations, or interact with external resources, thus posing no security risk.\"}",
+          "tokenUsage": {
+            "cached": 455,
+            "total": 455,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 225,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            }
+          },
+          "raw": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"is_vuln\": \"no\", \"cwe\": null, \"title\": \"No vulnerability found\", \"rationale\": \"The code simply prints a static string to the console. It does not process any external input, perform sensitive operations, or interact with external resources, thus posing no security risk.\"}"
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 166,
+              "candidatesTokenCount": 64,
+              "totalTokenCount": 455,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 166
+                }
+              ],
+              "thoughtsTokenCount": 225
+            },
+            "modelVersion": "gemini-2.5-flash",
+            "responseId": "xVVUaaibGL3BnsEPiPeFwAg"
+          },
+          "cached": true,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "code": "System.out.println(\"Hello\");",
+            "cwe_hint": null,
+            "label": "no",
+            "snippet": "10_safe.java"
+          },
+          "assert": [
+            {
+              "type": "is-json"
+            },
+            {
+              "type": "javascript",
+              "metric": "accuracy",
+              "value": "const expected = '{{ label }}';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   💡 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "vars": {
+          "code": "System.out.println(\"Hello\");",
+          "cwe_hint": null,
+          "label": "no",
+          "snippet": "10_safe.java"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 2,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 1123,
+        "total": 1123,
+        "numRequests": 0,
+        "completionDetails": {
+          "reasoning": 617,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0
+          }
+        }
+      },
+      "durationMs": 42
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "Lab 2 eval: Ultra-conservative config for Google AI Studio FREE TIER (15 RPM limit)",
+    "prompts": [
+      "file://C:\\Users\\esing\\Generative-AI-in-Cybersecurity\\LLM-Project-LABs\\starter-labs\\llm-sec-lab2-starter\\llm-sec-lab2\\prompts\\secure_review_chat.json"
+    ],
+    "providers": [
+      {
+        "id": "google:gemini-2.5-flash",
+        "label": "gemini-batch-free",
+        "config": {
+          "apiKey": "{{ env.GEMINI_API_KEY }}",
+          "temperature": 0,
+          "showThinking": false,
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      }
+    ],
+    "tests": [
+      {
+        "vars": {
+          "code": "String n = request.getParameter(\"n\"); Files.readString(Paths.get(\"..\", n)); // CWE-22",
+          "cwe_hint": "CWE-22",
+          "label": "yes",
+          "snippet": "09_path_trav.java"
+        }
+      },
+      {
+        "vars": {
+          "code": "System.out.println(\"Hello\");",
+          "cwe_hint": null,
+          "label": "no",
+          "snippet": "10_safe.java"
+        }
+      }
+    ],
+    "scenarios": [],
+    "env": {},
+    "defaultTest": {
+      "assert": [
+        {
+          "type": "is-json"
+        },
+        {
+          "type": "javascript",
+          "metric": "accuracy",
+          "value": "const expected = '{{ label }}';\nconst obj = typeof output === 'string' ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual === undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes') || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false')) actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason: `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n} else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG: Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0, 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\n` +\n            `   💡 FIX: Review prompt or provide better examples for this vulnerability type`\n  };\n}\n"
+        }
+      ],
+      "vars": {},
+      "options": {},
+      "metadata": {}
+    },
+    "outputPath": [
+      "reports/batches\\batch_05_results.json",
+      "reports/batches\\batch_05_report.html"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {
+      "maxConcurrency": 1,
+      "delay": 5000,
+      "timeoutSeconds": 180
+    }
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.120.8",
+    "nodeVersion": "v24.12.0",
+    "platform": "win32",
+    "arch": "x64",
+    "exportedAt": "2025-12-30T23:11:00.953Z",
+    "evaluationCreatedAt": "2025-12-30T23:11:00.840Z"
+  }
+}

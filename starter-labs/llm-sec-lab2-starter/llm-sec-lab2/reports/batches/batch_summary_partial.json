@@ -1,0 +1,12 @@
+[
+  {
+    "batch_num": 1,
+    "status": "error",
+    "error": "[WinError 2] Le fichier sp\u00e9cifi\u00e9 est introuvable"
+  },
+  {
+    "batch_num": 2,
+    "status": "error",
+    "error": "[WinError 2] Le fichier sp\u00e9cifi\u00e9 est introuvable"
+  }
+]

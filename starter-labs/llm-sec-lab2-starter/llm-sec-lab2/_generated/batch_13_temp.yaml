@@ -1,0 +1,18 @@
+- vars:
+    code: 'import pickle
+
+      raw = input(''data: '')
+
+      obj = pickle.loads(bytes.fromhex(raw))  # CWE-502'
+    cwe_hint: CWE-502
+    label: 'yes'
+    snippet: 05_deser.py
+- vars:
+    code: 'import hashlib
+
+      pwd = input(''pwd: '')
+
+      print(hashlib.md5(pwd.encode()).hexdigest())  # weak hash CWE-327'
+    cwe_hint: CWE-327
+    label: 'yes'
+    snippet: 06_hash.py

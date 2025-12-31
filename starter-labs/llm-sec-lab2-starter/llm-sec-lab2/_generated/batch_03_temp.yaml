@@ -1,0 +1,12 @@
+- vars:
+    code: MessageDigest md = MessageDigest.getInstance("MD5"); md.digest(pwd.getBytes());
+      // CWE-327
+    cwe_hint: CWE-327
+    label: 'yes'
+    snippet: 05_hash_md5.java
+- vars:
+    code: DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); DocumentBuilder
+      db = dbf.newDocumentBuilder(); db.parse(req.getInputStream()); // CWE-611
+    cwe_hint: CWE-611
+    label: 'yes'
+    snippet: 06_xxe.java

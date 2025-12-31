@@ -1,0 +1,39 @@
+$schema: https://promptfoo.dev/config-schema.json
+description: 'Lab 2 eval: Ultra-conservative config for Google AI Studio FREE TIER
+  (15 RPM limit)'
+providers:
+- id: google:gemini-2.5-flash
+  label: gemini-batch-free
+  config:
+    apiKey: '{{ env.GEMINI_API_KEY }}'
+    temperature: 0
+    showThinking: false
+    response_format:
+      type: json_object
+prompts:
+- file://C:\Users\esing\Generative-AI-in-Cybersecurity\LLM-Project-LABs\starter-labs\llm-sec-lab2-starter\llm-sec-lab2/prompts/secure_review_chat.json
+defaultTest:
+  assert:
+  - type: is-json
+  - type: javascript
+    metric: accuracy
+    value: "const expected = '{{ label }}';\nconst obj = typeof output === 'string'\
+      \ ? JSON.parse(output) : output;\nlet actual = obj.is_vuln;\n\nif (actual ===\
+      \ undefined && typeof obj.is_vulnerable === 'boolean') {\n  actual = obj.is_vulnerable\
+      \ ? 'yes' : 'no';\n} else if (actual === undefined && typeof obj.is_vulnerable\
+      \ === 'string') {\n  const v = obj.is_vulnerable.toLowerCase();\n  if (v.includes('yes')\
+      \ || v.includes('true')) actual = 'yes';\n  if (v.includes('no')  || v.includes('false'))\
+      \ actual = 'no';\n}\n\n// Enhanced feedback with detailed error message\nif\
+      \ (actual === expected) {\n  return {\n    pass: true,\n    score: 1,\n    reason:\
+      \ `✅ Correct classification: ${actual} (CWE: ${obj.cwe || 'N/A'})`\n  };\n}\
+      \ else {\n  return {\n    pass: false,\n    score: 0,\n    reason: `❌ WRONG:\
+      \ Expected \"${expected}\" but got \"${actual}\"\\n` +\n            `   Model\
+      \ said: ${obj.title || 'N/A'}\\n` +\n            `   Rationale: ${obj.rationale?.substring(0,\
+      \ 150) || 'N/A'}...\\n` +\n            `   CWE: ${obj.cwe || 'none detected'}\\\
+      n` +\n            `   \U0001F4A1 FIX: Review prompt or provide better examples\
+      \ for this vulnerability type`\n  };\n}\n"
+evaluateOptions:
+  maxConcurrency: 1
+  delay: 5000
+  timeoutSeconds: 180
+tests: file://C:\Users\esing\Generative-AI-in-Cybersecurity\LLM-Project-LABs\starter-labs\llm-sec-lab2-starter\llm-sec-lab2\_generated\batch_06_temp.yaml

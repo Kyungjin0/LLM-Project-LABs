@@ -1,0 +1,12 @@
+- vars:
+    code: String u = request.getParameter("u"); Statement st = conn.createStatement();
+      st.execute("SELECT * FROM users WHERE name='"+u+"'"); // CWE-89
+    cwe_hint: CWE-89
+    label: 'yes'
+    snippet: 01_sql_concat.java
+- vars:
+    code: String u = request.getParameter("u"); PreparedStatement ps = conn.prepareStatement("SELECT
+      * FROM users WHERE name=?"); ps.setString(1,u); ps.execute();
+    cwe_hint: null
+    label: 'no'
+    snippet: 02_sql_param.java

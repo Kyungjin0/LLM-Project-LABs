@@ -1,0 +1,18 @@
+- vars:
+    code: 'import os
+
+      path = input(''p: '')
+
+      os.system(''ls '' + path)  # CWE-78'
+    cwe_hint: CWE-78
+    label: 'yes'
+    snippet: 03_os_cmd.py
+- vars:
+    code: 'import subprocess, shlex
+
+      path = input(''p: '')
+
+      subprocess.run([''ls'', ''--'', path])'
+    cwe_hint: null
+    label: 'no'
+    snippet: 04_os_cmd_safe.py

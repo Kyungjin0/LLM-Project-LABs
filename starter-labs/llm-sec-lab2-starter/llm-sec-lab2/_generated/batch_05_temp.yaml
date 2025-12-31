@@ -1,0 +1,11 @@
+- vars:
+    code: String n = request.getParameter("n"); Files.readString(Paths.get("..", n));
+      // CWE-22
+    cwe_hint: CWE-22
+    label: 'yes'
+    snippet: 09_path_trav.java
+- vars:
+    code: System.out.println("Hello");
+    cwe_hint: null
+    label: 'no'
+    snippet: 10_safe.java

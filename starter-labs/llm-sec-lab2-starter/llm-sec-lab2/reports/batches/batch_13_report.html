@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Lab 2 eval: Ultra-conservative config for Google AI Studio FREE TIER (15 RPM limit)</title>
+    <style>
+      body {
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: left;
+        word-break: break-all;
+      }
+      th,
+      td {
+        padding: 5px;
+        min-width: 200px;
+        white-space: pre-wrap;
+        vertical-align: top;
+      }
+
+      tr > td[data-content^='[PASS]'] {
+        color: green;
+      }
+      tr > td[data-content^='[FAIL]'] {
+        color: #ad0000;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        
+        <th>code</th>
+        
+        <th>cwe_hint</th>
+        
+        <th>label</th>
+        
+        <th>snippet</th>
+        
+        <th>[gemini-batch-free] prompts&#92;secure_review_chat.json: [{&quot;role&quot;:&quot;system&quot;,&quot;content&quot;:&quot;You are a strict security code auditor. You MUST output a single JSON object and nothing else. The object MUST follow exactly this schema: {&#92;&quot;is_vuln&#92;&quot;: &#92;&quot;yes&#92;&quot; | &#92;&quot;no&#92;&quot;, &#92;&quot;cwe&#92;&quot;: &#92;&quot;CWE-###&#92;&quot; or null, &#92;&quot;title&#92;&quot;: &#92;&quot;short finding title&#92;&quot;, &#92;&quot;rationale&#92;&quot;: &#92;&quot;1-3 sentences explaining why this is or is not a vulnerability&#92;&quot;}. Do not add any other top-level properties. Do not wrap the JSON in backticks. Do not explain anything outside the JSON.&quot;},{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Analyse the following code and fill the JSON object. If the code is safe, set &#92;&quot;is_vuln&#92;&quot;: &#92;&quot;no&#92;&quot; and &#92;&quot;cwe&#92;&quot;: null. Code:&#92;n&lt;&lt;&lt;&#92;n{{code}}&#92;n&gt;&gt;&gt;&#92;n&#92;nRespond with the JSON object only:&quot;}]</th>
+        
+      </thead>
+      <tbody>
+        
+        <tr>
+          
+          <td data-content="import pickle
+raw = input(&#39;data: &#39;)
+obj = pickle.loads(bytes.fromhex(raw))  # CWE-502">import pickle
+raw = input(&#39;data: &#39;)
+obj = pickle.loads(bytes.fromhex(raw))  # CWE-502</td>
+          
+          <td data-content="CWE-502">CWE-502</td>
+          
+          <td data-content="yes">yes</td>
+          
+          <td data-content="05_deser.py">05_deser.py</td>
+          
+          <td data-content="[PASS] (1.00, accuracy: 1.00)
+
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-502&quot;, &quot;title&quot;: &quot;Insecure deserialization with pickle&quot;, &quot;rationale&quot;: &quot;The code deserializes user-controlled input using `pickle.loads`. Deserializing untrusted data with pickle can lead to arbitrary code execution, making this a critical security vulnerability.&quot;}
+
+Pass Reason: All assertions passed">[PASS] (1.00, accuracy: 1.00)
+
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-502&quot;, &quot;title&quot;: &quot;Insecure deserialization with pickle&quot;, &quot;rationale&quot;: &quot;The code deserializes user-controlled input using `pickle.loads`. Deserializing untrusted data with pickle can lead to arbitrary code execution, making this a critical security vulnerability.&quot;}
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+        <tr>
+          
+          <td data-content="import hashlib
+pwd = input(&#39;pwd: &#39;)
+print(hashlib.md5(pwd.encode()).hexdigest())  # weak hash CWE-327">import hashlib
+pwd = input(&#39;pwd: &#39;)
+print(hashlib.md5(pwd.encode()).hexdigest())  # weak hash CWE-327</td>
+          
+          <td data-content="CWE-327">CWE-327</td>
+          
+          <td data-content="yes">yes</td>
+          
+          <td data-content="06_hash.py">06_hash.py</td>
+          
+          <td data-content="[PASS] (1.00, accuracy: 1.00)
+
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-327&quot;, &quot;title&quot;: &quot;Use of Weak Cryptographic Hash Function (MD5)&quot;, &quot;rationale&quot;: &quot;The code uses MD5 for hashing, which is a cryptographically weak hash function. MD5 is susceptible to collision attacks and is not suitable for password storage or other security-sensitive applications.&quot;}
+
+Pass Reason: All assertions passed">[PASS] (1.00, accuracy: 1.00)
+
+{&quot;is_vuln&quot;: &quot;yes&quot;, &quot;cwe&quot;: &quot;CWE-327&quot;, &quot;title&quot;: &quot;Use of Weak Cryptographic Hash Function (MD5)&quot;, &quot;rationale&quot;: &quot;The code uses MD5 for hashing, which is a cryptographically weak hash function. MD5 is susceptible to collision attacks and is not suitable for password storage or other security-sensitive applications.&quot;}
+
+Pass Reason: All assertions passed</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+- vars:
+    code: DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",
+      true);
+    cwe_hint: null
+    label: 'no'
+    snippet: 07_xxe_safe.java
+- vars:
+    code: out.println("<h1>"+request.getParameter("name")+"</h1>"); // CWE-79
+    cwe_hint: CWE-79
+    label: 'yes'
+    snippet: 08_xss_java.java

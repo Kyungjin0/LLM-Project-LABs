@@ -1,0 +1,12 @@
+- vars:
+    code: app.get('/f',(req,res)=>{const fs=require('fs'); const p = '../' + req.query.n;
+      res.send(fs.readFileSync(p,'utf8'));}); // CWE-22
+    cwe_hint: CWE-22
+    label: 'yes'
+    snippet: 09_path_trav.js
+- vars:
+    code: app.get('/f',(req,res)=>{const fs=require('fs'); const name=req.query.n;
+      if(!/^[\w\-.]+$/.test(name)) return res.status(400).end(); res.send(fs.readFileSync(`safe/${name}`,'utf8'));});
+    cwe_hint: null
+    label: 'no'
+    snippet: 10_path_safe.js

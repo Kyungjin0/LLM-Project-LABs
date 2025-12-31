@@ -1,0 +1,10 @@
+- vars:
+    code: app.post('/e',(req,res)=>{res.send(eval(req.body.code))}); // CWE-94
+    cwe_hint: CWE-94
+    label: 'yes'
+    snippet: 07_eval.js
+- vars:
+    code: app.get('/',(req,res)=>res.send(`<h1>${req.query.name}</h1>`)); // CWE-79
+    cwe_hint: CWE-79
+    label: 'yes'
+    snippet: 08_template_xss.js

@@ -1,0 +1,12 @@
+- vars:
+    code: app.get('/u', (req,res)=>{const u=req.query.u; db.query("SELECT * FROM users
+      WHERE name='"+u+"'");}); // CWE-89
+    cwe_hint: CWE-89
+    label: 'yes'
+    snippet: 01_sql_concat.js
+- vars:
+    code: app.get('/u', (req,res)=>{const u=req.query.u; db.query('SELECT * FROM users
+      WHERE name=?',[u]);});
+    cwe_hint: null
+    label: 'no'
+    snippet: 02_sql_param.js

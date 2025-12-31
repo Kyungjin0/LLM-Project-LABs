@@ -1,0 +1,12 @@
+- vars:
+    code: const {exec} = require('child_process'); app.get('/ls',(req,res)=>exec('ls
+      '+req.query.p)); // CWE-78
+    cwe_hint: CWE-78
+    label: 'yes'
+    snippet: 03_exec.js
+- vars:
+    code: const {spawn} = require('child_process'); app.get('/ls',(req,res)=>spawn('ls',['--',
+      req.query.p]));
+    cwe_hint: null
+    label: 'no'
+    snippet: 04_exec_safe.js

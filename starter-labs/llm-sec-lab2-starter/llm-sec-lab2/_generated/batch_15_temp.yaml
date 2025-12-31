@@ -1,0 +1,14 @@
+- vars:
+    code: "from flask import Flask, request\napp = Flask(__name__)\n@app.route('/')\n\
+      def i():\n  name = request.args.get('name','')\n  return f\"<h1>{name}</h1>\"\
+      \  # CWE-79"
+    cwe_hint: CWE-79
+    label: 'yes'
+    snippet: 09_xss_flask.py
+- vars:
+    code: "from flask import Flask, request\nfrom markupsafe import escape\napp =\
+      \ Flask(__name__)\n@app.route('/')\ndef i():\n  name = request.args.get('name','')\n\
+      \  return f\"<h1>{escape(name)}</h1>\""
+    cwe_hint: null
+    label: 'no'
+    snippet: 10_xss_escape.py
